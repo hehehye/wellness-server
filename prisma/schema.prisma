@@ -1,0 +1,173 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["partialIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model bookings {
+  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id         String         @db.Uuid
+  session_id      String         @db.Uuid
+  status          booking_status @default(pending)
+  hold_expires_at DateTime?      @db.Timestamptz(6)
+  confirmed_at    DateTime?      @db.Timestamptz(6)
+  cancelled_at    DateTime?      @db.Timestamptz(6)
+  place_name      String
+  class_title     String
+  start_at        DateTime       @db.Timestamptz(6)
+  end_at          DateTime       @db.Timestamptz(6)
+  price           Int
+  created_at      DateTime       @default(now()) @db.Timestamptz(6)
+  payment_method  String?
+  payment_key     String?
+  paid_at         DateTime?      @db.Timestamptz(6)
+  class_sessions  class_sessions @relation(fields: [session_id], references: [id], onUpdate: NoAction)
+  users           users          @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+  place_reviews   place_reviews?
+
+  @@index([session_id], map: "bookings_session_idx")
+  @@index([user_id, created_at(sort: Desc)], map: "bookings_user_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model class_schedules {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  class_id    String    @db.Uuid
+  day_of_week Int       @db.SmallInt
+  start_time  DateTime  @db.Time(6)
+  valid_from  DateTime  @default(dbgenerated("CURRENT_DATE")) @db.Date
+  valid_until DateTime? @db.Date
+  classes     classes   @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([class_id, day_of_week, start_time])
+  @@unique([class_id, day_of_week, start_time], map: "class_schedules_uniq")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model class_sessions {
+  id               String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  class_id         String     @db.Uuid
+  start_at         DateTime   @db.Timestamptz(6)
+  end_at           DateTime   @db.Timestamptz(6)
+  capacity         Int
+  booking_opens_at DateTime   @db.Timestamptz(6)
+  created_at       DateTime   @default(now()) @db.Timestamptz(6)
+  bookings         bookings[]
+  classes          classes    @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([class_id, start_at])
+  @@unique([class_id, start_at], map: "class_sessions_class_start_uniq")
+  @@index([start_at], map: "class_sessions_start_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model classes {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  place_id        String            @db.Uuid
+  title           String
+  price           Int
+  capacity        Int
+  duration_min    Int
+  guide           String?
+  is_active       Boolean           @default(true)
+  created_at      DateTime          @default(now()) @db.Timestamptz(6)
+  class_schedules class_schedules[]
+  class_sessions  class_sessions[]
+  places          places            @relation(fields: [place_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([place_id], map: "classes_place_idx")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model place_images {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  place_id     String   @db.Uuid
+  storage_path String
+  sort_order   Int      @default(0)
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  places       places   @relation(fields: [place_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([place_id, sort_order], map: "place_images_place_idx")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model place_likes {
+  user_id    String   @db.Uuid
+  place_id   String   @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  places     places   @relation(fields: [place_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([user_id, place_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model place_reviews {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  place_id   String   @db.Uuid
+  user_id    String   @db.Uuid
+  booking_id String   @unique @db.Uuid
+  rating     Int      @db.SmallInt
+  content    String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  bookings   bookings @relation(fields: [booking_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  places     places   @relation(fields: [place_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([place_id, created_at(sort: Desc)], map: "place_reviews_place_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model places {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  owner_id      String?         @db.Uuid
+  name          String
+  category      String
+  description   String?
+  address       String
+  lat           Float
+  lng           Float
+  amenities     String[]        @default([])
+  created_at    DateTime        @default(now()) @db.Timestamptz(6)
+  classes       classes[]
+  place_images  place_images[]
+  place_likes   place_likes[]
+  place_reviews place_reviews[]
+  users         users?          @relation(fields: [owner_id], references: [id], onUpdate: NoAction)
+
+  @@index([category])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model users {
+  id            String          @id @db.Uuid
+  name          String          @db.VarChar
+  email         String
+  avatar_url    String?
+  provider      String?
+  role          String          @default("user")
+  created_at    DateTime?       @default(now()) @db.Timestamptz(6)
+  bookings      bookings[]
+  place_likes   place_likes[]
+  place_reviews place_reviews[]
+  places        places[]
+}
+
+enum booking_status {
+  pending
+  confirmed
+  completed
+  cancelled
+  expired
+}
