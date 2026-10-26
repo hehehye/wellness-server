@@ -38,7 +38,10 @@ export class PlacesService {
     const [place, like] = await Promise.all([
       this.prisma.places.findUnique({
         where: { id },
-        include: { place_images: { orderBy: { sort_order: 'asc' } } }, // 전체
+        include: {
+          place_images: { orderBy: { sort_order: 'asc' } }, // ← 안쪽 include 제거
+          _count: { select: { place_reviews: true } },
+        },
       }),
       userId
         ? this.prisma.place_likes.findFirst({

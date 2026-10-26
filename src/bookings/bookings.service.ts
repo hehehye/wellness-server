@@ -102,7 +102,11 @@ export class BookingsService {
       },
     });
     if (!booking) throw new NotFoundException('예약을 찾을 수 없어요');
-    return booking;
+    const review = await this.prisma.place_reviews.findUnique({
+      where: { booking_id: bookingId },
+      select: { id: true }, // 내용은 필요 X true,false반환필요해서 id만
+    });
+    return { ...booking, hasReview: !!review };
   }
   async pay(
     userId: string,
