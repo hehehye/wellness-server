@@ -47,6 +47,7 @@ export type PlacesMinAggregateOutputType = {
   lat: number | null
   lng: number | null
   created_at: Date | null
+  category_slug: string | null
 }
 
 export type PlacesMaxAggregateOutputType = {
@@ -59,6 +60,7 @@ export type PlacesMaxAggregateOutputType = {
   lat: number | null
   lng: number | null
   created_at: Date | null
+  category_slug: string | null
 }
 
 export type PlacesCountAggregateOutputType = {
@@ -72,6 +74,8 @@ export type PlacesCountAggregateOutputType = {
   lng: number
   amenities: number
   created_at: number
+  category_slug: number
+  amenity_slugs: number
   _all: number
 }
 
@@ -96,6 +100,7 @@ export type PlacesMinAggregateInputType = {
   lat?: true
   lng?: true
   created_at?: true
+  category_slug?: true
 }
 
 export type PlacesMaxAggregateInputType = {
@@ -108,6 +113,7 @@ export type PlacesMaxAggregateInputType = {
   lat?: true
   lng?: true
   created_at?: true
+  category_slug?: true
 }
 
 export type PlacesCountAggregateInputType = {
@@ -121,6 +127,8 @@ export type PlacesCountAggregateInputType = {
   lng?: true
   amenities?: true
   created_at?: true
+  category_slug?: true
+  amenity_slugs?: true
   _all?: true
 }
 
@@ -221,6 +229,8 @@ export type PlacesGroupByOutputType = {
   lng: number
   amenities: string[]
   created_at: Date
+  category_slug: string | null
+  amenity_slugs: string[]
   _count: PlacesCountAggregateOutputType | null
   _avg: PlacesAvgAggregateOutputType | null
   _sum: PlacesSumAggregateOutputType | null
@@ -257,10 +267,13 @@ export type placesWhereInput = {
   lng?: Prisma.FloatFilter<"places"> | number
   amenities?: Prisma.StringNullableListFilter<"places">
   created_at?: Prisma.DateTimeFilter<"places"> | Date | string
+  category_slug?: Prisma.StringNullableFilter<"places"> | string | null
+  amenity_slugs?: Prisma.StringNullableListFilter<"places">
   classes?: Prisma.ClassesListRelationFilter
   place_images?: Prisma.Place_imagesListRelationFilter
   place_likes?: Prisma.Place_likesListRelationFilter
   place_reviews?: Prisma.Place_reviewsListRelationFilter
+  categories?: Prisma.XOR<Prisma.CategoriesNullableScalarRelationFilter, Prisma.categoriesWhereInput> | null
   users?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null
 }
 
@@ -275,10 +288,13 @@ export type placesOrderByWithRelationInput = {
   lng?: Prisma.SortOrder
   amenities?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  category_slug?: Prisma.SortOrderInput | Prisma.SortOrder
+  amenity_slugs?: Prisma.SortOrder
   classes?: Prisma.classesOrderByRelationAggregateInput
   place_images?: Prisma.place_imagesOrderByRelationAggregateInput
   place_likes?: Prisma.place_likesOrderByRelationAggregateInput
   place_reviews?: Prisma.place_reviewsOrderByRelationAggregateInput
+  categories?: Prisma.categoriesOrderByWithRelationInput
   users?: Prisma.usersOrderByWithRelationInput
 }
 
@@ -296,10 +312,13 @@ export type placesWhereUniqueInput = Prisma.AtLeast<{
   lng?: Prisma.FloatFilter<"places"> | number
   amenities?: Prisma.StringNullableListFilter<"places">
   created_at?: Prisma.DateTimeFilter<"places"> | Date | string
+  category_slug?: Prisma.StringNullableFilter<"places"> | string | null
+  amenity_slugs?: Prisma.StringNullableListFilter<"places">
   classes?: Prisma.ClassesListRelationFilter
   place_images?: Prisma.Place_imagesListRelationFilter
   place_likes?: Prisma.Place_likesListRelationFilter
   place_reviews?: Prisma.Place_reviewsListRelationFilter
+  categories?: Prisma.XOR<Prisma.CategoriesNullableScalarRelationFilter, Prisma.categoriesWhereInput> | null
   users?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null
 }, "id">
 
@@ -314,6 +333,8 @@ export type placesOrderByWithAggregationInput = {
   lng?: Prisma.SortOrder
   amenities?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  category_slug?: Prisma.SortOrderInput | Prisma.SortOrder
+  amenity_slugs?: Prisma.SortOrder
   _count?: Prisma.placesCountOrderByAggregateInput
   _avg?: Prisma.placesAvgOrderByAggregateInput
   _max?: Prisma.placesMaxOrderByAggregateInput
@@ -335,6 +356,8 @@ export type placesScalarWhereWithAggregatesInput = {
   lng?: Prisma.FloatWithAggregatesFilter<"places"> | number
   amenities?: Prisma.StringNullableListFilter<"places">
   created_at?: Prisma.DateTimeWithAggregatesFilter<"places"> | Date | string
+  category_slug?: Prisma.StringNullableWithAggregatesFilter<"places"> | string | null
+  amenity_slugs?: Prisma.StringNullableListFilter<"places">
 }
 
 export type placesCreateInput = {
@@ -347,10 +370,12 @@ export type placesCreateInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesCreateNestedManyWithoutPlacesInput
   place_images?: Prisma.place_imagesCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesCreateNestedManyWithoutPlacesInput
   place_reviews?: Prisma.place_reviewsCreateNestedManyWithoutPlacesInput
+  categories?: Prisma.categoriesCreateNestedOneWithoutPlacesInput
   users?: Prisma.usersCreateNestedOneWithoutPlacesInput
 }
 
@@ -365,6 +390,8 @@ export type placesUncheckedCreateInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  category_slug?: string | null
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutPlacesInput
   place_images?: Prisma.place_imagesUncheckedCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesUncheckedCreateNestedManyWithoutPlacesInput
@@ -381,10 +408,12 @@ export type placesUpdateInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUpdateManyWithoutPlacesNestedInput
   place_images?: Prisma.place_imagesUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUpdateManyWithoutPlacesNestedInput
   place_reviews?: Prisma.place_reviewsUpdateManyWithoutPlacesNestedInput
+  categories?: Prisma.categoriesUpdateOneWithoutPlacesNestedInput
   users?: Prisma.usersUpdateOneWithoutPlacesNestedInput
 }
 
@@ -399,6 +428,8 @@ export type placesUncheckedUpdateInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category_slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedUpdateManyWithoutPlacesNestedInput
   place_images?: Prisma.place_imagesUncheckedUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUncheckedUpdateManyWithoutPlacesNestedInput
@@ -416,6 +447,8 @@ export type placesCreateManyInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  category_slug?: string | null
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
 }
 
 export type placesUpdateManyMutationInput = {
@@ -428,6 +461,7 @@ export type placesUpdateManyMutationInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
 }
 
 export type placesUncheckedUpdateManyInput = {
@@ -441,6 +475,8 @@ export type placesUncheckedUpdateManyInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category_slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
 }
 
 export type PlacesScalarRelationFilter = {
@@ -467,6 +503,8 @@ export type placesCountOrderByAggregateInput = {
   lng?: Prisma.SortOrder
   amenities?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  category_slug?: Prisma.SortOrder
+  amenity_slugs?: Prisma.SortOrder
 }
 
 export type placesAvgOrderByAggregateInput = {
@@ -484,6 +522,7 @@ export type placesMaxOrderByAggregateInput = {
   lat?: Prisma.SortOrder
   lng?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  category_slug?: Prisma.SortOrder
 }
 
 export type placesMinOrderByAggregateInput = {
@@ -496,6 +535,7 @@ export type placesMinOrderByAggregateInput = {
   lat?: Prisma.SortOrder
   lng?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  category_slug?: Prisma.SortOrder
 }
 
 export type placesSumOrderByAggregateInput = {
@@ -573,6 +613,10 @@ export type placesCreateamenitiesInput = {
   set: string[]
 }
 
+export type placesCreateamenity_slugsInput = {
+  set: string[]
+}
+
 export type FloatFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -582,6 +626,11 @@ export type FloatFieldUpdateOperationsInput = {
 }
 
 export type placesUpdateamenitiesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type placesUpdateamenity_slugsInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -628,6 +677,48 @@ export type placesUncheckedUpdateManyWithoutUsersNestedInput = {
   deleteMany?: Prisma.placesScalarWhereInput | Prisma.placesScalarWhereInput[]
 }
 
+export type placesCreateNestedManyWithoutCategoriesInput = {
+  create?: Prisma.XOR<Prisma.placesCreateWithoutCategoriesInput, Prisma.placesUncheckedCreateWithoutCategoriesInput> | Prisma.placesCreateWithoutCategoriesInput[] | Prisma.placesUncheckedCreateWithoutCategoriesInput[]
+  connectOrCreate?: Prisma.placesCreateOrConnectWithoutCategoriesInput | Prisma.placesCreateOrConnectWithoutCategoriesInput[]
+  createMany?: Prisma.placesCreateManyCategoriesInputEnvelope
+  connect?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+}
+
+export type placesUncheckedCreateNestedManyWithoutCategoriesInput = {
+  create?: Prisma.XOR<Prisma.placesCreateWithoutCategoriesInput, Prisma.placesUncheckedCreateWithoutCategoriesInput> | Prisma.placesCreateWithoutCategoriesInput[] | Prisma.placesUncheckedCreateWithoutCategoriesInput[]
+  connectOrCreate?: Prisma.placesCreateOrConnectWithoutCategoriesInput | Prisma.placesCreateOrConnectWithoutCategoriesInput[]
+  createMany?: Prisma.placesCreateManyCategoriesInputEnvelope
+  connect?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+}
+
+export type placesUpdateManyWithoutCategoriesNestedInput = {
+  create?: Prisma.XOR<Prisma.placesCreateWithoutCategoriesInput, Prisma.placesUncheckedCreateWithoutCategoriesInput> | Prisma.placesCreateWithoutCategoriesInput[] | Prisma.placesUncheckedCreateWithoutCategoriesInput[]
+  connectOrCreate?: Prisma.placesCreateOrConnectWithoutCategoriesInput | Prisma.placesCreateOrConnectWithoutCategoriesInput[]
+  upsert?: Prisma.placesUpsertWithWhereUniqueWithoutCategoriesInput | Prisma.placesUpsertWithWhereUniqueWithoutCategoriesInput[]
+  createMany?: Prisma.placesCreateManyCategoriesInputEnvelope
+  set?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+  disconnect?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+  delete?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+  connect?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+  update?: Prisma.placesUpdateWithWhereUniqueWithoutCategoriesInput | Prisma.placesUpdateWithWhereUniqueWithoutCategoriesInput[]
+  updateMany?: Prisma.placesUpdateManyWithWhereWithoutCategoriesInput | Prisma.placesUpdateManyWithWhereWithoutCategoriesInput[]
+  deleteMany?: Prisma.placesScalarWhereInput | Prisma.placesScalarWhereInput[]
+}
+
+export type placesUncheckedUpdateManyWithoutCategoriesNestedInput = {
+  create?: Prisma.XOR<Prisma.placesCreateWithoutCategoriesInput, Prisma.placesUncheckedCreateWithoutCategoriesInput> | Prisma.placesCreateWithoutCategoriesInput[] | Prisma.placesUncheckedCreateWithoutCategoriesInput[]
+  connectOrCreate?: Prisma.placesCreateOrConnectWithoutCategoriesInput | Prisma.placesCreateOrConnectWithoutCategoriesInput[]
+  upsert?: Prisma.placesUpsertWithWhereUniqueWithoutCategoriesInput | Prisma.placesUpsertWithWhereUniqueWithoutCategoriesInput[]
+  createMany?: Prisma.placesCreateManyCategoriesInputEnvelope
+  set?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+  disconnect?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+  delete?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+  connect?: Prisma.placesWhereUniqueInput | Prisma.placesWhereUniqueInput[]
+  update?: Prisma.placesUpdateWithWhereUniqueWithoutCategoriesInput | Prisma.placesUpdateWithWhereUniqueWithoutCategoriesInput[]
+  updateMany?: Prisma.placesUpdateManyWithWhereWithoutCategoriesInput | Prisma.placesUpdateManyWithWhereWithoutCategoriesInput[]
+  deleteMany?: Prisma.placesScalarWhereInput | Prisma.placesScalarWhereInput[]
+}
+
 export type placesCreateWithoutClassesInput = {
   id?: string
   name: string
@@ -638,9 +729,11 @@ export type placesCreateWithoutClassesInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   place_images?: Prisma.place_imagesCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesCreateNestedManyWithoutPlacesInput
   place_reviews?: Prisma.place_reviewsCreateNestedManyWithoutPlacesInput
+  categories?: Prisma.categoriesCreateNestedOneWithoutPlacesInput
   users?: Prisma.usersCreateNestedOneWithoutPlacesInput
 }
 
@@ -655,6 +748,8 @@ export type placesUncheckedCreateWithoutClassesInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  category_slug?: string | null
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   place_images?: Prisma.place_imagesUncheckedCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesUncheckedCreateNestedManyWithoutPlacesInput
   place_reviews?: Prisma.place_reviewsUncheckedCreateNestedManyWithoutPlacesInput
@@ -686,9 +781,11 @@ export type placesUpdateWithoutClassesInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   place_images?: Prisma.place_imagesUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUpdateManyWithoutPlacesNestedInput
   place_reviews?: Prisma.place_reviewsUpdateManyWithoutPlacesNestedInput
+  categories?: Prisma.categoriesUpdateOneWithoutPlacesNestedInput
   users?: Prisma.usersUpdateOneWithoutPlacesNestedInput
 }
 
@@ -703,6 +800,8 @@ export type placesUncheckedUpdateWithoutClassesInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category_slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   place_images?: Prisma.place_imagesUncheckedUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUncheckedUpdateManyWithoutPlacesNestedInput
   place_reviews?: Prisma.place_reviewsUncheckedUpdateManyWithoutPlacesNestedInput
@@ -718,9 +817,11 @@ export type placesCreateWithoutPlace_imagesInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesCreateNestedManyWithoutPlacesInput
   place_reviews?: Prisma.place_reviewsCreateNestedManyWithoutPlacesInput
+  categories?: Prisma.categoriesCreateNestedOneWithoutPlacesInput
   users?: Prisma.usersCreateNestedOneWithoutPlacesInput
 }
 
@@ -735,6 +836,8 @@ export type placesUncheckedCreateWithoutPlace_imagesInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  category_slug?: string | null
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesUncheckedCreateNestedManyWithoutPlacesInput
   place_reviews?: Prisma.place_reviewsUncheckedCreateNestedManyWithoutPlacesInput
@@ -766,9 +869,11 @@ export type placesUpdateWithoutPlace_imagesInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUpdateManyWithoutPlacesNestedInput
   place_reviews?: Prisma.place_reviewsUpdateManyWithoutPlacesNestedInput
+  categories?: Prisma.categoriesUpdateOneWithoutPlacesNestedInput
   users?: Prisma.usersUpdateOneWithoutPlacesNestedInput
 }
 
@@ -783,6 +888,8 @@ export type placesUncheckedUpdateWithoutPlace_imagesInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category_slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUncheckedUpdateManyWithoutPlacesNestedInput
   place_reviews?: Prisma.place_reviewsUncheckedUpdateManyWithoutPlacesNestedInput
@@ -798,9 +905,11 @@ export type placesCreateWithoutPlace_likesInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesCreateNestedManyWithoutPlacesInput
   place_images?: Prisma.place_imagesCreateNestedManyWithoutPlacesInput
   place_reviews?: Prisma.place_reviewsCreateNestedManyWithoutPlacesInput
+  categories?: Prisma.categoriesCreateNestedOneWithoutPlacesInput
   users?: Prisma.usersCreateNestedOneWithoutPlacesInput
 }
 
@@ -815,6 +924,8 @@ export type placesUncheckedCreateWithoutPlace_likesInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  category_slug?: string | null
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutPlacesInput
   place_images?: Prisma.place_imagesUncheckedCreateNestedManyWithoutPlacesInput
   place_reviews?: Prisma.place_reviewsUncheckedCreateNestedManyWithoutPlacesInput
@@ -846,9 +957,11 @@ export type placesUpdateWithoutPlace_likesInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUpdateManyWithoutPlacesNestedInput
   place_images?: Prisma.place_imagesUpdateManyWithoutPlacesNestedInput
   place_reviews?: Prisma.place_reviewsUpdateManyWithoutPlacesNestedInput
+  categories?: Prisma.categoriesUpdateOneWithoutPlacesNestedInput
   users?: Prisma.usersUpdateOneWithoutPlacesNestedInput
 }
 
@@ -863,6 +976,8 @@ export type placesUncheckedUpdateWithoutPlace_likesInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category_slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedUpdateManyWithoutPlacesNestedInput
   place_images?: Prisma.place_imagesUncheckedUpdateManyWithoutPlacesNestedInput
   place_reviews?: Prisma.place_reviewsUncheckedUpdateManyWithoutPlacesNestedInput
@@ -878,9 +993,11 @@ export type placesCreateWithoutPlace_reviewsInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesCreateNestedManyWithoutPlacesInput
   place_images?: Prisma.place_imagesCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesCreateNestedManyWithoutPlacesInput
+  categories?: Prisma.categoriesCreateNestedOneWithoutPlacesInput
   users?: Prisma.usersCreateNestedOneWithoutPlacesInput
 }
 
@@ -895,6 +1012,8 @@ export type placesUncheckedCreateWithoutPlace_reviewsInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  category_slug?: string | null
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutPlacesInput
   place_images?: Prisma.place_imagesUncheckedCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesUncheckedCreateNestedManyWithoutPlacesInput
@@ -926,9 +1045,11 @@ export type placesUpdateWithoutPlace_reviewsInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUpdateManyWithoutPlacesNestedInput
   place_images?: Prisma.place_imagesUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUpdateManyWithoutPlacesNestedInput
+  categories?: Prisma.categoriesUpdateOneWithoutPlacesNestedInput
   users?: Prisma.usersUpdateOneWithoutPlacesNestedInput
 }
 
@@ -943,6 +1064,8 @@ export type placesUncheckedUpdateWithoutPlace_reviewsInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category_slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedUpdateManyWithoutPlacesNestedInput
   place_images?: Prisma.place_imagesUncheckedUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUncheckedUpdateManyWithoutPlacesNestedInput
@@ -958,10 +1081,12 @@ export type placesCreateWithoutUsersInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesCreateNestedManyWithoutPlacesInput
   place_images?: Prisma.place_imagesCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesCreateNestedManyWithoutPlacesInput
   place_reviews?: Prisma.place_reviewsCreateNestedManyWithoutPlacesInput
+  categories?: Prisma.categoriesCreateNestedOneWithoutPlacesInput
 }
 
 export type placesUncheckedCreateWithoutUsersInput = {
@@ -974,6 +1099,8 @@ export type placesUncheckedCreateWithoutUsersInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  category_slug?: string | null
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedCreateNestedManyWithoutPlacesInput
   place_images?: Prisma.place_imagesUncheckedCreateNestedManyWithoutPlacesInput
   place_likes?: Prisma.place_likesUncheckedCreateNestedManyWithoutPlacesInput
@@ -1020,6 +1147,70 @@ export type placesScalarWhereInput = {
   lng?: Prisma.FloatFilter<"places"> | number
   amenities?: Prisma.StringNullableListFilter<"places">
   created_at?: Prisma.DateTimeFilter<"places"> | Date | string
+  category_slug?: Prisma.StringNullableFilter<"places"> | string | null
+  amenity_slugs?: Prisma.StringNullableListFilter<"places">
+}
+
+export type placesCreateWithoutCategoriesInput = {
+  id?: string
+  name: string
+  category: string
+  description?: string | null
+  address: string
+  lat: number
+  lng: number
+  amenities?: Prisma.placesCreateamenitiesInput | string[]
+  created_at?: Date | string
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
+  classes?: Prisma.classesCreateNestedManyWithoutPlacesInput
+  place_images?: Prisma.place_imagesCreateNestedManyWithoutPlacesInput
+  place_likes?: Prisma.place_likesCreateNestedManyWithoutPlacesInput
+  place_reviews?: Prisma.place_reviewsCreateNestedManyWithoutPlacesInput
+  users?: Prisma.usersCreateNestedOneWithoutPlacesInput
+}
+
+export type placesUncheckedCreateWithoutCategoriesInput = {
+  id?: string
+  owner_id?: string | null
+  name: string
+  category: string
+  description?: string | null
+  address: string
+  lat: number
+  lng: number
+  amenities?: Prisma.placesCreateamenitiesInput | string[]
+  created_at?: Date | string
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
+  classes?: Prisma.classesUncheckedCreateNestedManyWithoutPlacesInput
+  place_images?: Prisma.place_imagesUncheckedCreateNestedManyWithoutPlacesInput
+  place_likes?: Prisma.place_likesUncheckedCreateNestedManyWithoutPlacesInput
+  place_reviews?: Prisma.place_reviewsUncheckedCreateNestedManyWithoutPlacesInput
+}
+
+export type placesCreateOrConnectWithoutCategoriesInput = {
+  where: Prisma.placesWhereUniqueInput
+  create: Prisma.XOR<Prisma.placesCreateWithoutCategoriesInput, Prisma.placesUncheckedCreateWithoutCategoriesInput>
+}
+
+export type placesCreateManyCategoriesInputEnvelope = {
+  data: Prisma.placesCreateManyCategoriesInput | Prisma.placesCreateManyCategoriesInput[]
+  skipDuplicates?: boolean
+}
+
+export type placesUpsertWithWhereUniqueWithoutCategoriesInput = {
+  where: Prisma.placesWhereUniqueInput
+  update: Prisma.XOR<Prisma.placesUpdateWithoutCategoriesInput, Prisma.placesUncheckedUpdateWithoutCategoriesInput>
+  create: Prisma.XOR<Prisma.placesCreateWithoutCategoriesInput, Prisma.placesUncheckedCreateWithoutCategoriesInput>
+}
+
+export type placesUpdateWithWhereUniqueWithoutCategoriesInput = {
+  where: Prisma.placesWhereUniqueInput
+  data: Prisma.XOR<Prisma.placesUpdateWithoutCategoriesInput, Prisma.placesUncheckedUpdateWithoutCategoriesInput>
+}
+
+export type placesUpdateManyWithWhereWithoutCategoriesInput = {
+  where: Prisma.placesScalarWhereInput
+  data: Prisma.XOR<Prisma.placesUpdateManyMutationInput, Prisma.placesUncheckedUpdateManyWithoutCategoriesInput>
 }
 
 export type placesCreateManyUsersInput = {
@@ -1032,6 +1223,8 @@ export type placesCreateManyUsersInput = {
   lng: number
   amenities?: Prisma.placesCreateamenitiesInput | string[]
   created_at?: Date | string
+  category_slug?: string | null
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
 }
 
 export type placesUpdateWithoutUsersInput = {
@@ -1044,10 +1237,12 @@ export type placesUpdateWithoutUsersInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUpdateManyWithoutPlacesNestedInput
   place_images?: Prisma.place_imagesUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUpdateManyWithoutPlacesNestedInput
   place_reviews?: Prisma.place_reviewsUpdateManyWithoutPlacesNestedInput
+  categories?: Prisma.categoriesUpdateOneWithoutPlacesNestedInput
 }
 
 export type placesUncheckedUpdateWithoutUsersInput = {
@@ -1060,6 +1255,8 @@ export type placesUncheckedUpdateWithoutUsersInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category_slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
   classes?: Prisma.classesUncheckedUpdateManyWithoutPlacesNestedInput
   place_images?: Prisma.place_imagesUncheckedUpdateManyWithoutPlacesNestedInput
   place_likes?: Prisma.place_likesUncheckedUpdateManyWithoutPlacesNestedInput
@@ -1076,6 +1273,72 @@ export type placesUncheckedUpdateManyWithoutUsersInput = {
   lng?: Prisma.FloatFieldUpdateOperationsInput | number
   amenities?: Prisma.placesUpdateamenitiesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category_slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
+}
+
+export type placesCreateManyCategoriesInput = {
+  id?: string
+  owner_id?: string | null
+  name: string
+  category: string
+  description?: string | null
+  address: string
+  lat: number
+  lng: number
+  amenities?: Prisma.placesCreateamenitiesInput | string[]
+  created_at?: Date | string
+  amenity_slugs?: Prisma.placesCreateamenity_slugsInput | string[]
+}
+
+export type placesUpdateWithoutCategoriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  lat?: Prisma.FloatFieldUpdateOperationsInput | number
+  lng?: Prisma.FloatFieldUpdateOperationsInput | number
+  amenities?: Prisma.placesUpdateamenitiesInput | string[]
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
+  classes?: Prisma.classesUpdateManyWithoutPlacesNestedInput
+  place_images?: Prisma.place_imagesUpdateManyWithoutPlacesNestedInput
+  place_likes?: Prisma.place_likesUpdateManyWithoutPlacesNestedInput
+  place_reviews?: Prisma.place_reviewsUpdateManyWithoutPlacesNestedInput
+  users?: Prisma.usersUpdateOneWithoutPlacesNestedInput
+}
+
+export type placesUncheckedUpdateWithoutCategoriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  owner_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  lat?: Prisma.FloatFieldUpdateOperationsInput | number
+  lng?: Prisma.FloatFieldUpdateOperationsInput | number
+  amenities?: Prisma.placesUpdateamenitiesInput | string[]
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
+  classes?: Prisma.classesUncheckedUpdateManyWithoutPlacesNestedInput
+  place_images?: Prisma.place_imagesUncheckedUpdateManyWithoutPlacesNestedInput
+  place_likes?: Prisma.place_likesUncheckedUpdateManyWithoutPlacesNestedInput
+  place_reviews?: Prisma.place_reviewsUncheckedUpdateManyWithoutPlacesNestedInput
+}
+
+export type placesUncheckedUpdateManyWithoutCategoriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  owner_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  lat?: Prisma.FloatFieldUpdateOperationsInput | number
+  lng?: Prisma.FloatFieldUpdateOperationsInput | number
+  amenities?: Prisma.placesUpdateamenitiesInput | string[]
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amenity_slugs?: Prisma.placesUpdateamenity_slugsInput | string[]
 }
 
 
@@ -1147,10 +1410,13 @@ export type placesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   lng?: boolean
   amenities?: boolean
   created_at?: boolean
+  category_slug?: boolean
+  amenity_slugs?: boolean
   classes?: boolean | Prisma.places$classesArgs<ExtArgs>
   place_images?: boolean | Prisma.places$place_imagesArgs<ExtArgs>
   place_likes?: boolean | Prisma.places$place_likesArgs<ExtArgs>
   place_reviews?: boolean | Prisma.places$place_reviewsArgs<ExtArgs>
+  categories?: boolean | Prisma.places$categoriesArgs<ExtArgs>
   users?: boolean | Prisma.places$usersArgs<ExtArgs>
   _count?: boolean | Prisma.PlacesCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["places"]>
@@ -1166,6 +1432,9 @@ export type placesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   lng?: boolean
   amenities?: boolean
   created_at?: boolean
+  category_slug?: boolean
+  amenity_slugs?: boolean
+  categories?: boolean | Prisma.places$categoriesArgs<ExtArgs>
   users?: boolean | Prisma.places$usersArgs<ExtArgs>
 }, ExtArgs["result"]["places"]>
 
@@ -1180,6 +1449,9 @@ export type placesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   lng?: boolean
   amenities?: boolean
   created_at?: boolean
+  category_slug?: boolean
+  amenity_slugs?: boolean
+  categories?: boolean | Prisma.places$categoriesArgs<ExtArgs>
   users?: boolean | Prisma.places$usersArgs<ExtArgs>
 }, ExtArgs["result"]["places"]>
 
@@ -1194,21 +1466,26 @@ export type placesSelectScalar = {
   lng?: boolean
   amenities?: boolean
   created_at?: boolean
+  category_slug?: boolean
+  amenity_slugs?: boolean
 }
 
-export type placesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "owner_id" | "name" | "category" | "description" | "address" | "lat" | "lng" | "amenities" | "created_at", ExtArgs["result"]["places"]>
+export type placesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "owner_id" | "name" | "category" | "description" | "address" | "lat" | "lng" | "amenities" | "created_at" | "category_slug" | "amenity_slugs", ExtArgs["result"]["places"]>
 export type placesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   classes?: boolean | Prisma.places$classesArgs<ExtArgs>
   place_images?: boolean | Prisma.places$place_imagesArgs<ExtArgs>
   place_likes?: boolean | Prisma.places$place_likesArgs<ExtArgs>
   place_reviews?: boolean | Prisma.places$place_reviewsArgs<ExtArgs>
+  categories?: boolean | Prisma.places$categoriesArgs<ExtArgs>
   users?: boolean | Prisma.places$usersArgs<ExtArgs>
   _count?: boolean | Prisma.PlacesCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type placesIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  categories?: boolean | Prisma.places$categoriesArgs<ExtArgs>
   users?: boolean | Prisma.places$usersArgs<ExtArgs>
 }
 export type placesIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  categories?: boolean | Prisma.places$categoriesArgs<ExtArgs>
   users?: boolean | Prisma.places$usersArgs<ExtArgs>
 }
 
@@ -1219,6 +1496,7 @@ export type $placesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     place_images: Prisma.$place_imagesPayload<ExtArgs>[]
     place_likes: Prisma.$place_likesPayload<ExtArgs>[]
     place_reviews: Prisma.$place_reviewsPayload<ExtArgs>[]
+    categories: Prisma.$categoriesPayload<ExtArgs> | null
     users: Prisma.$usersPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1232,6 +1510,8 @@ export type $placesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     lng: number
     amenities: string[]
     created_at: Date
+    category_slug: string | null
+    amenity_slugs: string[]
   }, ExtArgs["result"]["places"]>
   composites: {}
 }
@@ -1630,6 +1910,7 @@ export interface Prisma__placesClient<T, Null = never, ExtArgs extends runtime.T
   place_images<T extends Prisma.places$place_imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.places$place_imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$place_imagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   place_likes<T extends Prisma.places$place_likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.places$place_likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$place_likesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   place_reviews<T extends Prisma.places$place_reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.places$place_reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$place_reviewsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  categories<T extends Prisma.places$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.places$categoriesArgs<ExtArgs>>): Prisma.Prisma__categoriesClient<runtime.Types.Result.GetResult<Prisma.$categoriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   users<T extends Prisma.places$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.places$usersArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1670,6 +1951,8 @@ export interface placesFieldRefs {
   readonly lng: Prisma.FieldRef<"places", 'Float'>
   readonly amenities: Prisma.FieldRef<"places", 'String[]'>
   readonly created_at: Prisma.FieldRef<"places", 'DateTime'>
+  readonly category_slug: Prisma.FieldRef<"places", 'String'>
+  readonly amenity_slugs: Prisma.FieldRef<"places", 'String[]'>
 }
     
 
@@ -2164,6 +2447,25 @@ export type places$place_reviewsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.Place_reviewsScalarFieldEnum | Prisma.Place_reviewsScalarFieldEnum[]
+}
+
+/**
+ * places.categories
+ */
+export type places$categoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the categories
+   */
+  select?: Prisma.categoriesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the categories
+   */
+  omit?: Prisma.categoriesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.categoriesInclude<ExtArgs> | null
+  where?: Prisma.categoriesWhereInput
 }
 
 /**

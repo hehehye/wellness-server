@@ -59,7 +59,9 @@ export const ModelName = {
   place_likes: 'place_likes',
   place_reviews: 'place_reviews',
   places: 'places',
-  users: 'users'
+  users: 'users',
+  categories: 'categories',
+  amenities: 'amenities'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -183,7 +185,9 @@ export const PlacesScalarFieldEnum = {
   lat: 'lat',
   lng: 'lng',
   amenities: 'amenities',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  category_slug: 'category_slug',
+  amenity_slugs: 'amenity_slugs'
 } as const
 
 export type PlacesScalarFieldEnum = (typeof PlacesScalarFieldEnum)[keyof typeof PlacesScalarFieldEnum]
@@ -200,6 +204,30 @@ export const UsersScalarFieldEnum = {
 } as const
 
 export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
+
+
+export const CategoriesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  icon: 'icon',
+  sort_order: 'sort_order',
+  created_at: 'created_at'
+} as const
+
+export type CategoriesScalarFieldEnum = (typeof CategoriesScalarFieldEnum)[keyof typeof CategoriesScalarFieldEnum]
+
+
+export const AmenitiesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  icon: 'icon',
+  sort_order: 'sort_order',
+  created_at: 'created_at'
+} as const
+
+export type AmenitiesScalarFieldEnum = (typeof AmenitiesScalarFieldEnum)[keyof typeof AmenitiesScalarFieldEnum]
 
 
 export const SortOrder = {

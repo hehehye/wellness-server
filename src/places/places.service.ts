@@ -9,17 +9,24 @@ export class PlacesService {
   }
 
   /** 장소 목록 (최신순) */
-  async getAll(q?: string) {
+  async getAll(q?: string, categories?: string[], amenities?: string[]) {
+    console.log(categories);
     const places = await this.prisma.places.findMany({
-      where: q
-        ? {
-            OR: [
-              { name: { contains: q, mode: 'insensitive' } },
-              { category: { contains: q, mode: 'insensitive' } },
-              { address: { contains: q, mode: 'insensitive' } },
-            ],
-          }
-        : undefined,
+      where: {
+        AND: [
+          q
+            ? {
+                OR: [
+                  { name: { contains: q, mode: 'insensitive' } },
+                  { category: { contains: q, mode: 'insensitive' } },
+                  { address: { contains: q, mode: 'insensitive' } },
+                ],
+              }
+            : {},
+          categories?.length ? { category_slug: { in: categories } } : {},
+          amenities?.length ? { amenity_slugs: { hasSome: amenities } } : {},
+        ],
+      },
       orderBy: { created_at: 'desc' },
       include: {
         place_images: { orderBy: { sort_order: 'asc' }, take: 1 }, // 대표 1장
@@ -33,7 +40,6 @@ export class PlacesService {
         : null,
     }));
   }
-
   async getOne(id: string, userId?: string) {
     const [place, like] = await Promise.all([
       this.prisma.places.findUnique({

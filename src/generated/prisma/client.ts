@@ -90,3 +90,13 @@ export type places = Prisma.placesModel
  * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
  */
 export type users = Prisma.usersModel
+/**
+ * Model categories
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type categories = Prisma.categoriesModel
+/**
+ * Model amenities
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type amenities = Prisma.amenitiesModel

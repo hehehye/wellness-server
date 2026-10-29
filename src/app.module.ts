@@ -7,6 +7,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { SessionsModule } from './sessions/sessions.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { CategoryModule } from './category/category.module';
+import { AmenityModule } from './amenities/amenities.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { ReviewsModule } from './reviews/reviews.module';
     SessionsModule,
     BookingsModule,
     ReviewsModule,
+    CategoryModule,
+    AmenityModule,
   ],
 })
 export class AppModule {}

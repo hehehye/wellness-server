@@ -8,8 +8,18 @@ export class PlacesController {
   constructor(private readonly placesService: PlacesService) {}
 
   @Get()
-  getAll(@Query('q') q?: string) {
-    return this.placesService.getAll(q);
+  getAll(
+    @Query('q') q?: string,
+    @Query('category') category?: string[],
+    @Query('amenity') amenity?: string[],
+  ) {
+    const categories = category
+      ? [category].flat().flatMap((c) => c.split(','))
+      : undefined;
+    const amenities = amenity
+      ? [amenity].flat().flatMap((c) => c.split(','))
+      : undefined;
+    return this.placesService.getAll(q, categories, amenities);
   }
   @UseGuards(OptionalAuthGuard)
   @Get(':id')

@@ -54,4 +54,13 @@ export class ReviewsService {
       },
     });
   }
+  async delete(userId: string, reviewId: string) {
+    const result = await this.prisma.place_reviews.deleteMany({
+      where: { id: reviewId, user_id: userId }, // 내 리뷰만
+    });
+    if (result.count === 0) {
+      throw new NotFoundException('리뷰를 찾을 수 없거나 삭제 권한이 없어요');
+    }
+    return { success: true };
+  }
 }

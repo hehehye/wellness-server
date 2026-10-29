@@ -140,10 +140,13 @@ model places {
   lng           Float
   amenities     String[]        @default([])
   created_at    DateTime        @default(now()) @db.Timestamptz(6)
+  category_slug String?
+  amenity_slugs String[]        @default([])
   classes       classes[]
   place_images  place_images[]
   place_likes   place_likes[]
   place_reviews place_reviews[]
+  categories    categories?     @relation(fields: [category_slug], references: [slug], onDelete: NoAction, onUpdate: NoAction)
   users         users?          @relation(fields: [owner_id], references: [id], onUpdate: NoAction)
 
   @@index([category])
@@ -162,6 +165,27 @@ model users {
   place_likes   place_likes[]
   place_reviews place_reviews[]
   places        places[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model categories {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String   @unique
+  slug       String   @unique
+  icon       String?
+  sort_order Int      @default(0)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  places     places[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model amenities {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String   @unique
+  slug       String   @unique
+  icon       String?
+  sort_order Int      @default(0)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
 }
 
 enum booking_status {

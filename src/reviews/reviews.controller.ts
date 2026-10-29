@@ -33,4 +33,10 @@ export class ReviewsController {
       body.content,
     );
   }
+
+  @UseGuards(AuthGuard)
+  @Delete(':id')
+  delete(@CurrentUser() user: { id: string }, @Param('id') id: string) {
+    return this.reviewsService.delete(user.id, id);
+  }
 }
